@@ -25,7 +25,8 @@ async function sendDiscord() {
       .setColor('#3498db')
       .addFields(
         { name: '**タイトル**', value: title },
-        { name: '**ID**', value: tid }
+        { name: '**ID**', value: tid },
+        { name: 'ツール制作者', value: '[Github @kozaku05](https://github.com/kozaku05/AniCord)' },
       )
       .setFooter({ text: '使用API: https://cal.syoboi.jp' });
 
