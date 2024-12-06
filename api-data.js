@@ -4,7 +4,7 @@ const xml2js = require('xml2js');
 async function getRandomAnime() {
   try {
     let data = await axios.get(
-      'https://cal.syoboi.jp/db.php?Command=TitleLookup&Fields=TID,Title,Cat'
+      'https://cal.syoboi.jp/db.php?Command=TitleLookup&TID=*&Fields=TID,Title,Cat'
     );
 
     return new Promise((resolve, reject) => {
