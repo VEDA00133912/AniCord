@@ -10,9 +10,10 @@
 
 このプロジェクトの使い方については、以下の手順に従ってください。
 
-1. `index.js` を開きコメントに沿って webhook やユーザーネームの設定をします
-2. `node index.js` で起動
-3. discord を確認
+1. `.env` を開きwebhookの設定をします
+2. `index.js`を開きWebhook名の設定をします
+3. `node index.js` で起動
+4. discord を確認
 
 ---
 
