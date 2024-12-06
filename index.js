@@ -1,50 +1,44 @@
-const getData = require("./api-data");
-const axios = require("axios");
+require('dotenv').config();
+const { EmbedBuilder } = require('discord.js');
+const getRandomAnime = require('./api-data');
+const axios = require('axios');
+
+const WEBHOOK_URL = process.env.WEBHOOK_URL;
+
 async function sendDiscord() {
+  if (!WEBHOOK_URL) {
+    console.error('Webhook URL が設定されていません。');
+    return;
+  }
+
   try {
-    let number = Math.floor(Math.random() * 7302) + 1;
-    let data = await getData(number);
-    let { itemId, title } = data;
-    console.log("id=" + number);
-    console.log(title, itemId);
-    if (title === "") return;
-    const url = ""; //ここにwebhookのURLを入れてください
+    let data = await getRandomAnime();
+    if (!data || !data.title) return;
+
+    let { tid, title } = data;
+    console.log('取得したアニメ:', title, tid);
+
+    const embed = new EmbedBuilder()
+      .setTitle('**今回取得したアニメ**')
+      .setDescription('ランダムに取得されたアニメの情報です！')
+      .setURL('https://cal.syoboi.jp/tid/${tid}')
+      .setColor('#3498db')
+      .addFields(
+        { name: '**タイトル**', value: title },
+        { name: '**ID**', value: tid }
+      )
+      .setFooter({ text: '使用API: https://cal.syoboi.jp' });
+
     const body = {
-      username: "", //名前を入れてください
-      avatar_url: "", //アイコンのURLを指定
-      embeds: [
-        {
-          title: "**今回取得したアニメ**",
-          description: "ランダムに取得されたアニメの情報です！",
-          url: "https://cal.syoboi.jp/tid/" + itemId,
-          color: 0x3498db,
-          footer: {
-            text: "使用API: https://cal.syoboi.jp",
-          },
-          fields: [
-            {
-              name: "**タイトル**",
-              value: title,
-              inline: true,
-            },
-            {
-              name: "**ID**",
-              value: itemId,
-              inline: true,
-            },
-            {
-              name: "ツール制作者",
-              value: "[Github @kozaku05](https://github.com/kozaku05/AniCord)",
-              inline: false,
-            },
-          ],
-        },
-      ],
+      username: 'アニメ通知BOT',
+      embeds: [embed.toJSON()],
     };
-    axios.post(url, body);
+
+    await axios.post(WEBHOOK_URL, body);
   } catch (error) {
-    console.error("Error in sendDiscord:", error.message);
+    console.error('Error in sendDiscord:', error.message);
   }
 }
+
 sendDiscord();
-setInterval(sendDiscord, 600000);//好きなミリ秒を入力
+setInterval(sendDiscord, 600000);
